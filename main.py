@@ -1,28 +1,56 @@
 from preprocessors import RegexPreprocessor
 from tokenizers import SimpleTokenizerV1, SimpleTokenizerV2, TiktokenTokenizer
 from datasets import GPTDatasetV1
-from utils import create_dataloader_v1, create_embedding_layer
+from utils import create_dataloader_v1, create_embedding_layer, generate_text_simple
 from torch import arange
+from attention import MultiHeadAttentionWrapper, CausalAttention
+from models import DummyGPTModel, GPTModel
+import torch
 
-path = 'The_Verdict.txt'
+GPT_CONFIG_124M = {
+    "vocab_size": 50257,
+    "context_length": 1024,
+    "emb_dim": 768,
+    "n_heads": 12,
+    "n_layers": 12,
+    "drop_rate": 0.1,
+    "qkv_bias": False
+}
 
-with open(path, 'r', encoding='utf8') as file:
-    text = file.read()
+tokenizer = TiktokenTokenizer()
+# batch = []
+# txt1 = "Every effort moves you"
+# txt2 = "Every day holds a"
 
-    max_length = 4
+# batch.append(torch.tensor(tokenizer.encode(txt1)))
+# batch.append(torch.tensor(tokenizer.encode(txt2)))
+# batch = torch.stack(batch, dim=0)
 
-    tokenizer = TiktokenTokenizer()
-    dataset = GPTDatasetV1(text, tokenizer, max_length=max_length, stride=1)
-    dataloader = create_dataloader_v1(dataset, batch_size=8, shuffle=False, drop_last=False)
+torch.manual_seed(123)
+model = GPTModel(GPT_CONFIG_124M)
+# out = model(batch)
 
-    data_iter = iter(dataloader)
-    inputs, target = next(data_iter)
-    token_embedding_layer = create_embedding_layer(vocab_size=tokenizer.vocab_size, output_dim=256)
-    pos_embedding_layer = create_embedding_layer(vocab_size=max_length, output_dim=256)
+# print("Input Batch:\n", batch)
+# print("Output Shape:\n", out.shape)
+# print(out)
 
-    token_embeddings = token_embedding_layer(inputs)
-    pos_embeddings = pos_embedding_layer(arange(max_length))
+start_context = "Hello, I am"
+encoded = tokenizer.encode(start_context)
+print("Encoded: ", encoded)
+encoded_tensor = torch.tensor(encoded).unsqueeze(0)
+print("Encoded Tensor Shape: ", encoded_tensor.shape)
 
-    input_embeddings = token_embeddings + pos_embeddings
+model.eval()
+out = generate_text_simple(
+    model=model,
+    idx=encoded_tensor,
+    max_new_tokens=6,
+    context_size=GPT_CONFIG_124M["context_length"]
+)
 
-    print(input_embeddings.shape)
+print("Output: ", out)
+print("Output length:", len(out[0]))
+
+decoded_text = tokenizer.decode(out.squeeze(0).tolist())
+
+print("Decoded Text: ", decoded_text)

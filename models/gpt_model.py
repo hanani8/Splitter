@@ -5,6 +5,7 @@ from attention import MultiHeadAttention
 class GPTModel(nn.Module):
     def __init__(self, cfg):
         super().__init__()
+        self.config = cfg
         self.tok_emb = nn.Embedding(cfg['vocab_size'], cfg['emb_dim'])
         self.pos_emb = nn.Embedding(cfg['context_length'], cfg['emb_dim'])
 

@@ -1,5 +1,4 @@
 import torch
-torch.manual_seed(123)
 import torch.nn as nn
 
 class SelfAttention_v1(nn.Module):

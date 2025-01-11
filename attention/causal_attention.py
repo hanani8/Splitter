@@ -1,5 +1,4 @@
 import torch
-torch.manual_seed(789)
 import torch.nn as nn
 
 class CausalAttention(nn.Module):

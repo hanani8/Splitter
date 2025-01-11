@@ -1,3 +1,6 @@
 from .create_dataloader_v1 import create_dataloader_v1
 from .create_embedding_layer import create_embedding_layer
 from .generate_text_simple import generate_text_simple
+from .calc_loss_batch import calc_loss_batch
+from .calc_loss_loader import calc_loss_loader
+from .train_model_simple import train_model_simple

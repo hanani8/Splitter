@@ -1,15 +1,19 @@
 from preprocessors import RegexPreprocessor
 from tokenizers import SimpleTokenizerV1, SimpleTokenizerV2, TiktokenTokenizer
 from datasets import GPTDatasetV1
-from utils import create_dataloader_v1, create_embedding_layer, generate_text_simple
+from dataloaders import create_dataloader
+from utils import create_dataloader_v1, create_embedding_layer, generate_text_simple, calc_loss_batch, calc_loss_loader, train_model_simple
 from torch import arange
 from attention import MultiHeadAttentionWrapper, CausalAttention
 from models import DummyGPTModel, GPTModel
 import torch
+from training import LoaderLoss, BatchLoss, SimpleTrainer
+
+torch.manual_seed(123)
 
 GPT_CONFIG_124M = {
     "vocab_size": 50257,
-    "context_length": 1024,
+    "context_length": 256,
     "emb_dim": 768,
     "n_heads": 12,
     "n_layers": 12,
@@ -18,39 +22,40 @@ GPT_CONFIG_124M = {
 }
 
 tokenizer = TiktokenTokenizer()
-# batch = []
-# txt1 = "Every effort moves you"
-# txt2 = "Every day holds a"
 
-# batch.append(torch.tensor(tokenizer.encode(txt1)))
-# batch.append(torch.tensor(tokenizer.encode(txt2)))
-# batch = torch.stack(batch, dim=0)
+filepath = "The_Verdict.txt"
+with open(filepath, "r", encoding="utf-8") as f:
+    text_data = f.read()
 
-torch.manual_seed(123)
+total_characters = len(text_data)
+total_tokens = len(tokenizer.encode(text_data))
+
+print("Characters: ", total_characters)
+print("Tokens: ", total_tokens)
+
+train_ratio = 0.9
+split_idx = int(train_ratio * len(text_data))
+train_data = text_data[:split_idx]
+test_data = text_data[split_idx:]
+
+train_loader = create_dataloader(text = train_data, batch_size=2, max_length=GPT_CONFIG_124M["context_length"], stride=GPT_CONFIG_124M['context_length'], drop_last=True, shuffle=True, num_workers=0)
+val_loader = create_dataloader(text = test_data, batch_size=2, max_length=GPT_CONFIG_124M["context_length"], stride=GPT_CONFIG_124M['context_length'], drop_last=False, shuffle=False, num_workers=0)
+
+print("Loading Model ... ")
 model = GPTModel(GPT_CONFIG_124M)
-# out = model(batch)
+print("Model Loaded")
 
-# print("Input Batch:\n", batch)
-# print("Output Shape:\n", out.shape)
-# print(out)
+optimizer = torch.optim.AdamW(
+    model.parameters(),
+    lr = 0.0004,
+    weight_decay = 0.1)
 
-start_context = "Hello, I am"
-encoded = tokenizer.encode(start_context)
-print("Encoded: ", encoded)
-encoded_tensor = torch.tensor(encoded).unsqueeze(0)
-print("Encoded Tensor Shape: ", encoded_tensor.shape)
+trainer = SimpleTrainer(model=model, train_loader=train_loader, validation_loader=val_loader, optimizer=optimizer, tokenizer=tokenizer)
 
-model.eval()
-out = generate_text_simple(
-    model=model,
-    idx=encoded_tensor,
-    max_new_tokens=6,
-    context_size=GPT_CONFIG_124M["context_length"]
-)
+num_epochs = 10
 
-print("Output: ", out)
-print("Output length:", len(out[0]))
-
-decoded_text = tokenizer.decode(out.squeeze(0).tolist())
-
-print("Decoded Text: ", decoded_text)
+train_losses, validation_losses, tokens_seen = trainer.train(
+    num_epochs = num_epochs,
+    eval_freq = 5,
+    eval_iter = 5,
+    start_context = "I would love to")

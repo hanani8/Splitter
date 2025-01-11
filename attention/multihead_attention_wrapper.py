@@ -1,5 +1,4 @@
 import torch
-torch.manual_seed(789)
 import torch.nn as nn
 from attention import CausalAttention
 

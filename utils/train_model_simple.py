@@ -1,5 +1,7 @@
 import torch
-from utils import calc_loss_batch, calc_loss_loader, generate_text_simple
+from .calc_loss_batch import calc_loss_batch
+from .calc_loss_loader import calc_loss_loader
+from .generate_text_simple import generate_text_simple
 
 def train_model_simple(model, train_loader, val_loader, optimizer, device, num_epochs, eval_freq, eval_iter, start_context, tokenizer):
     

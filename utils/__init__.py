@@ -4,3 +4,4 @@ from .generate_text_simple import generate_text_simple
 from .calc_loss_batch import calc_loss_batch
 from .calc_loss_loader import calc_loss_loader
 from .train_model_simple import train_model_simple
+from .load_weights_into_gpt import load_weights_into_gpt

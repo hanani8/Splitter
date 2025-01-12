@@ -20,10 +20,10 @@ class SpamDataset:
                 encoded_text[:self.max_length] for encoded_text in self.encoded_texts
             ]
 
-            self.encoded_texts = [
-                encoded_text + [pad_token_id] * (self.max_length - len(encoded_text))
-                for encoded_text in self.encoded_texts
-            ]
+        self.encoded_texts = [
+            encoded_text + [pad_token_id] * (self.max_length - len(encoded_text))
+            for encoded_text in self.encoded_texts
+        ]
     
     def __getitem__(self, index):
         encoded = self.encoded_texts[index]

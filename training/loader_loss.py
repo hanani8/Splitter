@@ -1,7 +1,7 @@
 from typing import Optional
 import torch
 from .batch_loss import BatchLoss
-from models import GPTModel
+from ..models import GPTModel
 
 class LoaderLoss:
     def __init__(self, model: GPTModel, device: Optional[str] = None):

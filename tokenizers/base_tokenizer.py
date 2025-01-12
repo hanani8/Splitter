@@ -1,6 +1,6 @@
 import torch
 from typing import List
-from preprocessors import RegexPreprocessor
+from ..preprocessors import RegexPreprocessor
 
 class BaseTokenizer:
     """

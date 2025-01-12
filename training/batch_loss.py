@@ -1,6 +1,6 @@
 from typing import Optional
 import torch
-from models import GPTModel
+from ..models import GPTModel
 
 class BatchLoss:
     def __init__(self, model: GPTModel, device: Optional[str] = None):

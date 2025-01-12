@@ -1,8 +1,8 @@
 from typing import Optional
 import torch
-from models import GPTModel
-from tokenizers import BaseTokenizer
-from generators import BaseGenerator, SimpleTextGenerator
+from ..models import GPTModel
+from ..tokenizers import BaseTokenizer
+from ..generators import BaseGenerator, SimpleTextGenerator
 from .batch_loss import BatchLoss
 from .loader_loss import LoaderLoss
 

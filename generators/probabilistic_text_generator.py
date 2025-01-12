@@ -1,6 +1,6 @@
 from typing import Optional
 import torch
-from models import GPTModel
+from ..models import GPTModel
 from .base_generator import BaseGenerator
 
 class ProbabilisticTextGenerator(BaseGenerator):

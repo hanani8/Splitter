@@ -1,6 +1,6 @@
 import torch
-from tokenizers import TiktokenTokenizer
-from datasets import GPTDatasetV1
+from ..tokenizers import TiktokenTokenizer
+from ..datasets import GPTDatasetV1
 
 def create_dataloader(
     text: str,

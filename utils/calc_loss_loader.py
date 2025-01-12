@@ -1,4 +1,4 @@
-from utils import calc_loss_batch
+from .calc_loss_batch import calc_loss_batch
 
 def calc_loss_loader(data_loader, model, device, num_batches = None):
     total_loss = 0.0

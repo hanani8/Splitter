@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from attention import MultiHeadAttention
+from ..attention import MultiHeadAttention
 
 class GPTModel(nn.Module):
     def __init__(self, cfg):

@@ -1,6 +1,6 @@
 import re
-from preprocessors import RegexPreprocessor
-from tokenizers import BaseTokenizer
+from ..preprocessors import RegexPreprocessor
+from .base_tokenizer import BaseTokenizer
 
 class SimpleTokenizerV2(BaseTokenizer):
     def __init__(self, corpus: str, preprocessor: RegexPreprocessor, unk_token='<|unk|>'):

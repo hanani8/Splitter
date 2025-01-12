@@ -1,5 +1,5 @@
 import torch
-from models import GPTModel
+from ..models import GPTModel
 from .base_generator import BaseGenerator
 
 class SimpleTextGenerator(BaseGenerator):

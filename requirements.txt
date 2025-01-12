@@ -1,2 +1,5 @@
 tiktoken
 torch
+tqdm>=4.66
+tensorflow>=2.15.0
+numpy<2.0.0

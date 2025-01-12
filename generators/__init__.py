@@ -1,2 +1,3 @@
 from .base_generator import BaseGenerator
 from .simple_text_generator import SimpleTextGenerator
+from .probabilistic_text_generator import ProbabilisticTextGenerator

@@ -8,6 +8,8 @@ from attention import MultiHeadAttentionWrapper, CausalAttention
 from models import DummyGPTModel, GPTModel
 import torch
 from training import LoaderLoss, BatchLoss, SimpleTrainer
+from generators import SimpleTextGenerator, ProbabilisticTextGenerator
+from gpt_download import download_and_load_gpt2
 
 torch.manual_seed(123)
 
@@ -33,29 +35,39 @@ total_tokens = len(tokenizer.encode(text_data))
 print("Characters: ", total_characters)
 print("Tokens: ", total_tokens)
 
-train_ratio = 0.9
-split_idx = int(train_ratio * len(text_data))
-train_data = text_data[:split_idx]
-test_data = text_data[split_idx:]
+# train_ratio = 0.9
+# split_idx = int(train_ratio * len(text_data))
+# train_data = text_data[:split_idx]
+# test_data = text_data[split_idx:]
 
-train_loader = create_dataloader(text = train_data, batch_size=2, max_length=GPT_CONFIG_124M["context_length"], stride=GPT_CONFIG_124M['context_length'], drop_last=True, shuffle=True, num_workers=0)
-val_loader = create_dataloader(text = test_data, batch_size=2, max_length=GPT_CONFIG_124M["context_length"], stride=GPT_CONFIG_124M['context_length'], drop_last=False, shuffle=False, num_workers=0)
+# train_loader = create_dataloader(text = train_data, batch_size=2, max_length=GPT_CONFIG_124M["context_length"], stride=GPT_CONFIG_124M['context_length'], drop_last=True, shuffle=True, num_workers=0)
+# val_loader = create_dataloader(text = test_data, batch_size=2, max_length=GPT_CONFIG_124M["context_length"], stride=GPT_CONFIG_124M['context_length'], drop_last=False, shuffle=False, num_workers=0)
 
-print("Loading Model ... ")
-model = GPTModel(GPT_CONFIG_124M)
-print("Model Loaded")
+# print("Loading Model ... ")
+# model = GPTModel(GPT_CONFIG_124M)
+# print("Model Loaded")
 
-optimizer = torch.optim.AdamW(
-    model.parameters(),
-    lr = 0.0004,
-    weight_decay = 0.1)
+# optimizer = torch.optim.AdamW(
+#     model.parameters(),
+#     lr = 0.0004,
+#     weight_decay = 0.1)
 
-trainer = SimpleTrainer(model=model, train_loader=train_loader, validation_loader=val_loader, optimizer=optimizer, tokenizer=tokenizer)
+# trainer = SimpleTrainer(model=model, train_loader=train_loader, validation_loader=val_loader, optimizer=optimizer, tokenizer=tokenizer, generator=ProbabilisticTextGenerator(model, max_new_tokens=50, temperature=0.7, top_k=40))
 
-num_epochs = 10
+# num_epochs = 10
 
-train_losses, validation_losses, tokens_seen = trainer.train(
-    num_epochs = num_epochs,
-    eval_freq = 5,
-    eval_iter = 5,
-    start_context = "I would love to")
+# train_losses, validation_losses, tokens_seen = trainer.train(
+#     num_epochs = num_epochs,
+#     eval_freq = 5,
+#     eval_iter = 5,
+#     start_context = "I would love to")
+
+
+# settings, params = download_and_load_gpt2(model_size="124M", models_dir="state/gpt2")
+
+# NEW_CONFIG = GPT_CONFIG_124M.copy()
+# NEW_CONFIG.update({"context_length": 1024})
+# NEW_CONFIG.update({"qkv_bias": True})
+
+# gpt = GPTModel(NEW_CONFIG)
+# gpt.eval()

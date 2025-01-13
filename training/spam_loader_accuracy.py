@@ -22,8 +22,8 @@ class SpamAccuracyLoader:
 
         for i, (input_batch, target_batch) in enumerate(data_loader):
             if i < num_batches:
-                input_batch.to(self.device)
-                target_batch.to(self.device)
+                input_batch = input_batch.to(self.device)
+                target_batch = target_batch.to(self.device)
 
                 with torch.no_grad():
                     logits = self.model(input_batch)[:, -1, :]

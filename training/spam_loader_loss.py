@@ -3,7 +3,7 @@ import torch
 from .spam_batch_loss import SpamBatchLoss
 from ..models import GPTModel
 
-class LoaderLoss:
+class SpamLoaderLoss:
     def __init__(self, model: GPTModel, device: Optional[str] = None):
         if device is None:
             device = "cuda" if torch.cuda.is_available() else "cpu"

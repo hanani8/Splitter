@@ -32,9 +32,9 @@ class SpamAccuracyLoader:
 
                 num_examples += predicted_labels.shape[0]
 
-                correct_predictions += {
+                correct_predictions += (
                     (predicted_labels == target_batch).sum().item()
-                }
+                )
             
             else:
                 break

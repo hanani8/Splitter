@@ -25,6 +25,8 @@ class SpamLoaderLoss:
 
         for i, (input_batch, target_batch) in enumerate(data_loader):
             if i < num_batches:
+                input_batch = input_batch.to(self.device)
+                target_batch = target_batch.to(self.device)
                 loss = self.batch_loss.calc(input_batch, target_batch)
                 total_loss += loss.item()
             else:
